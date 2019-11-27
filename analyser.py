@@ -38,7 +38,7 @@ def count_words(line, name):
 
 def main():
     # Get some input from the user about the details of the text file.
-    file_name = "talent.txt"  # input("Enter the name of the text file:\n")
+    file_name = "lucy.txt"  # input("Enter the name of the text file:\n")
 
     with io.open(file_name, "r", encoding = "utf-8") as text:
         conv_text = text.readlines()
@@ -66,16 +66,17 @@ def main():
     count = 0
     for line in conv_text:
         num_words = 0
-        if first_name in line:
-            count += 1
-            first_total_messages += 1
-            num_words = count_words(line, first_name)
-            first_total_words += num_words
-        elif second_name in line:
-            count += 1
-            second_total_messages += 1
-            num_words = count_words(line, second_name)
-            second_total_words += num_words
+        if "<Media omitted>" not in line:
+            if first_name in line:
+                count += 1
+                first_total_messages += 1
+                num_words = count_words(line, first_name)
+                first_total_words += num_words
+            elif second_name in line:
+                count += 1
+                second_total_messages += 1
+                num_words = count_words(line, second_name)
+                second_total_words += num_words
 
     print("{:6} total messages.\n".format(count))
 
