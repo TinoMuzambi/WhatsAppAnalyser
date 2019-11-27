@@ -27,11 +27,9 @@ def extract_names(conv_file):
         pos = second_name.find(":")
         second_name = second_name[:pos]
 
-    print(first_name, second_name)
-
 
 def count_words(line, name):
-        curr = line[len(name) + 2:]
+        curr = line[len(name) + 22:]
         if " " in curr:
             curr = curr.split()
             return len(curr)
@@ -40,10 +38,17 @@ def count_words(line, name):
 
 def main():
     # Get some input from the user about the details of the text file.
-    file_name = "taffy.txt"  # input("Enter the name of the text file:\n")
+    file_name = "talent.txt"  # input("Enter the name of the text file:\n")
 
     with io.open(file_name, "r", encoding = "utf-8") as text:
         conv_text = text.readlines()
+    text.close()
+    with io.open("line of text.txt", "w", encoding="utf-8") as out_file:
+        count1 = 0
+        for i in conv_text:
+            count1 += 1
+            print(str(count1) + " " + i.strip("\n"), file = out_file)
+    out_file.close()
     # Extracting chat names from text file.
     extract_names(conv_text)
 
@@ -53,28 +58,35 @@ def main():
     print("\n===========================================================================================\n")
     print("WhatsApp chat statistics for conversation between {} and {}".format(first_name, second_name))
     print("\n===========================================================================================\n")
-    print("{:6} total messages.\n".format(len(conv_text) - 1))
 
     first_total_messages = 0
     second_total_messages = 0
     first_total_words = 0
     second_total_words = 0
+    count = 0
     for line in conv_text:
         num_words = 0
         if first_name in line:
+            count += 1
             first_total_messages += 1
             num_words = count_words(line, first_name)
             first_total_words += num_words
         elif second_name in line:
+            count += 1
             second_total_messages += 1
             num_words = count_words(line, second_name)
             second_total_words += num_words
+
+    print("{:6} total messages.\n".format(count))
 
     print("{:6} total messages for {}.".format(first_total_messages, first_name))
     print("{:6} total messages for {}.\n".format(second_total_messages, second_name))
 
     print("{:6} total words for {}.".format(first_total_words, first_name))
     print("{:6} total words for {}.\n".format(second_total_words, second_name))
+
+    print("{:2.2f} average message length for {}.".format(first_total_words / first_total_messages, first_name))
+    print("{:2.2f} average message length for {}.".format(second_total_words / second_total_messages, second_name))
 
 
 if __name__ == '__main__':
