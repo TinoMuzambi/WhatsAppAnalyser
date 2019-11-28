@@ -38,22 +38,22 @@ def count_words(line, name):
 
 def main():
     # Get some input from the user about the details of the text file.
-    file_name = "lucy.txt"  # input("Enter the name of the text file:\n")
+    file_name = input("Enter the name of the text file:\n")
 
     with io.open(file_name, "r", encoding = "utf-8") as text:
         conv_text = text.readlines()
     text.close()
+
+    # Debug code
     with io.open("line of text.txt", "w", encoding="utf-8") as out_file:
         count1 = 0
         for i in conv_text:
             count1 += 1
             print(str(count1) + " " + i.strip("\n"), file = out_file)
     out_file.close()
+
     # Extracting chat names from text file.
     extract_names(conv_text)
-
-    # first_name = "My Highschool Sweetheart"  # input("Enter the name of the first person in the chat:\n")
-    # second_name = "Tino Muzambi"  # input("Enter the name of the second person in the chat:\n")
 
     print("\n===========================================================================================\n")
     print("WhatsApp chat statistics for conversation between {} and {}".format(first_name, second_name))
