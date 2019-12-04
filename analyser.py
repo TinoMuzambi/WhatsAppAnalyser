@@ -8,8 +8,20 @@ second_name = ""
 
 
 def extract_names(conv_file):
-    first_line = conv_file[1]
-    second_line = conv_file[2]
+    # Edge cases:
+    if "changed their phone number." in conv_file[1]:
+        first_line = conv_file[2]
+        second_line = conv_file[3]
+    elif not conv_file[2][0].isdigit():
+        first_line = conv_file[1]
+        second_line = conv_file[3]
+        num = 3
+        while not conv_file[num][0].isdigit():
+            num += 1
+            second_line = conv_file[num]
+    else:
+        first_line = conv_file[1]
+        second_line = conv_file[2]
     i = 2   
     global first_name
     first_name = first_line[20:]
@@ -69,14 +81,6 @@ def main():
     extract_names(conv_msg)
     conv_text = get_msg_list(conv_msg)
     text.close()
-
-    # Debug code
-    with io.open("line of text.txt", "w", encoding="utf-8") as out_file:
-        count1 = 0
-        for i in conv_text:
-            count1 += 1
-            print(str(count1) + " " + i.strip("\n"), file = out_file)
-    out_file.close()
 
     print("\n===========================================================================================\n")
     print("WhatsApp chat statistics for conversation between {} and {}".format(first_name, second_name))
