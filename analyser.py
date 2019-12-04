@@ -10,7 +10,7 @@ second_name = ""
 def extract_names(conv_file):
     first_line = conv_file[1]
     second_line = conv_file[2]
-    i = 2
+    i = 2   
     global first_name
     first_name = first_line[20:]
     pos = first_name.find(":")
@@ -28,6 +28,28 @@ def extract_names(conv_file):
         second_name = second_name[:pos]
 
 
+def get_msg_list(conv_text):
+    out = []
+    first = True
+    i = -1
+    conv_text = conv_text[1:]
+    for line in conv_text:
+        i += 1
+        if first_name in line:
+            first = True
+            out.append(line)
+        elif second_name in line:
+            first = False
+            out.append(line)
+        else:
+            curr = out[i - 1]
+            curr += line
+            out[i - 1] = curr
+            i -= 1
+
+    return out
+
+
 def count_words(line, name):
         curr = line[len(name) + 22:]
         if " " in curr:
@@ -41,7 +63,11 @@ def main():
     file_name = input("Enter the name of the text file:\n")
 
     with io.open(file_name, "r", encoding = "utf-8") as text:
-        conv_text = text.readlines()
+        conv_msg = text.readlines()
+
+    # Extracting chat names from text file.
+    extract_names(conv_msg)
+    conv_text = get_msg_list(conv_msg)
     text.close()
 
     # Debug code
@@ -51,9 +77,6 @@ def main():
             count1 += 1
             print(str(count1) + " " + i.strip("\n"), file = out_file)
     out_file.close()
-
-    # Extracting chat names from text file.
-    extract_names(conv_text)
 
     print("\n===========================================================================================\n")
     print("WhatsApp chat statistics for conversation between {} and {}".format(first_name, second_name))
