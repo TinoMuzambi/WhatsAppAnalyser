@@ -8,6 +8,10 @@ second_name = ""
 
 
 def extract_names(conv_file):
+    """
+    Extract the names of the people in the chat for use in other parts of the program.
+    :param conv_file: list of text file contents.
+    """
     # Edge cases:
     if "changed their phone number." in conv_file[1]:
         first_line = conv_file[2]
@@ -22,7 +26,7 @@ def extract_names(conv_file):
     else:
         first_line = conv_file[1]
         second_line = conv_file[2]
-    i = 2   
+    i = 2
     global first_name
     first_name = first_line[20:]
     pos = first_name.find(":")
@@ -41,17 +45,19 @@ def extract_names(conv_file):
 
 
 def get_msg_list(conv_text):
+    """
+    Process initial list to produce a list where each element is a whole message instead of a line.
+    :param conv_text: list of text file contents.
+    :return: transformed list.
+    """
     out = []
-    first = True
     i = -1
     conv_text = conv_text[1:]
     for line in conv_text:
         i += 1
         if first_name in line:
-            first = True
             out.append(line)
         elif second_name in line:
-            first = False
             out.append(line)
         else:
             curr = out[i - 1]
@@ -63,28 +69,44 @@ def get_msg_list(conv_text):
 
 
 def count_words(line, name):
-        curr = line[len(name) + 22:]
-        if " " in curr:
-            curr = curr.split()
-            return len(curr)
-        return 1
+    """
+    Count the number of words in a string.
+    :param line: the string being counted for words.
+    :param name: name of the person in the string to exclude that from the count.
+    :return: number of words in the string.
+    """
+    curr = line[len(name) + 22:]
+    if " " in curr:
+        curr = curr.split()
+        return len(curr)
+    return 1
 
 
-def de_emojify(input_string):
-    return input_string.encode('ascii', 'ignore').decode('ascii').strip(".").strip(",").strip("?").strip("!")\
+def remove_characters(input_string):
+    """
+    Remove unwanted characters including emojis from string.
+    :param input_string: string to be processed.
+    :return: string with all unwanted characters removed.
+    """
+    return input_string.encode('ascii', 'ignore').decode('ascii').strip(".").strip(",").strip("?").strip("!") \
         .strip(":").strip(";").strip("(").strip(")").strip("-")
 
 
-def most_common_words(file):
+def most_common_words(file_list):
+    """
+    Populates dictionary with count of words used in the chat.
+    :param file_list: list of text file contents.
+    :return: dictionary with count of words.
+    """
     words = {}
-    for line in file:
+    for line in file_list:
         if first_name in line:
             line = line[22 + len(first_name):]
         else:
             line = line[22 + len(second_name):]
         line = line.split()
         for word in line:
-            word = de_emojify(word)
+            word = remove_characters(word)
             if word == "":
                 continue
             word = word.lower()
@@ -99,7 +121,7 @@ def main():
     # Get some input from the user about the details of the text file.
     file_name = input("Enter the name of the text file:\n")
 
-    with io.open(file_name, "r", encoding = "utf-8") as text:
+    with io.open(file_name, "r", encoding="utf-8") as text:
         conv_msg = text.readlines()
 
     # Extracting chat names from text file.
@@ -118,7 +140,6 @@ def main():
     second_total_words = 0
     count = 0
     for line in conv_text:
-        num_words = 0
         if "<Media omitted>" not in line:
             if first_name in line:
                 count += 1
@@ -143,7 +164,7 @@ def main():
     print("{:2.2f} average message length for {}.\n".format(second_total_words / second_total_messages, second_name))
 
     print("Top 20 most used words:")
-    words.pop("<media")
+    words.pop("<media")     # Not very elegant, needs work.
     words.pop("omitted>")
     for i in range(20):
         high = max(words.values())
