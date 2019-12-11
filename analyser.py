@@ -70,6 +70,31 @@ def count_words(line, name):
         return 1
 
 
+def de_emojify(input_string):
+    return input_string.encode('ascii', 'ignore').decode('ascii').strip(".").strip(",").strip("?").strip("!")\
+        .strip(":").strip(";").strip("(").strip(")").strip("-")
+
+
+def most_common_words(file):
+    words = {}
+    for line in file:
+        if first_name in line:
+            line = line[22 + len(first_name):]
+        else:
+            line = line[22 + len(second_name):]
+        line = line.split()
+        for word in line:
+            word = de_emojify(word)
+            if word == "":
+                continue
+            word = word.lower()
+            if word in words:
+                words[word] = words[word] + 1
+            else:
+                words[word] = 1
+    return words
+
+
 def main():
     # Get some input from the user about the details of the text file.
     file_name = input("Enter the name of the text file:\n")
@@ -80,6 +105,7 @@ def main():
     # Extracting chat names from text file.
     extract_names(conv_msg)
     conv_text = get_msg_list(conv_msg)
+    words = most_common_words(conv_text)
     text.close()
 
     print("\n===========================================================================================\n")
@@ -114,7 +140,16 @@ def main():
     print("{:6} total words for {}.\n".format(second_total_words, second_name))
 
     print("{:2.2f} average message length for {}.".format(first_total_words / first_total_messages, first_name))
-    print("{:2.2f} average message length for {}.".format(second_total_words / second_total_messages, second_name))
+    print("{:2.2f} average message length for {}.\n".format(second_total_words / second_total_messages, second_name))
+
+    print("Top 20 most used words:")
+    words.pop("<media")
+    words.pop("omitted>")
+    for i in range(20):
+        high = max(words.values())
+        curr = list(words.keys())[list(words.values()).index(high)]
+        print("{:2}. {:10} ({})".format(i + 1, curr, high))
+        words.pop(curr)
 
 
 if __name__ == '__main__':
