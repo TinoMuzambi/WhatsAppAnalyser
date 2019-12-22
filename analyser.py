@@ -248,6 +248,10 @@ def main():
         print("{:2}. {:10} ({})".format(i + 1, curr, high))
         second_words_count_dict.pop(curr)
 
+    word_count_file = open("word_count.txt", "w")
+    print(words_count_dict, file = word_count_file)
+    word_count_file.close()
+
 
 if __name__ == '__main__':
     main()
