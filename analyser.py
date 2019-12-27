@@ -2,6 +2,7 @@
 # Tino Muzambi
 # 26 November 2019
 import io
+from prettytable import PrettyTable
 
 first_name = ""
 second_name = ""
@@ -228,25 +229,31 @@ def main():
     second_words_count_dict.pop("<media")
     second_words_count_dict.pop("omitted>")
 
+    top = PrettyTable(["Number", "Word", "Count"])
     for i in range(30):
         high = max(words_count_dict.values())
         curr = list(words_count_dict.keys())[list(words_count_dict.values()).index(high)]
-        print("{:2}. {:10} ({})".format(i + 1, curr, high))
+        top.add_row([i + 1, curr, high])
         words_count_dict.pop(curr)
+    print(top)
 
+    first_top = PrettyTable(["Number", "Word", "Count"])
     print("\nTop 30 most used words by {}:".format(first_name))
     for i in range(30):
         high = max(first_words_count_dict.values())
         curr = list(first_words_count_dict.keys())[list(first_words_count_dict.values()).index(high)]
-        print("{:2}. {:10} ({})".format(i + 1, curr, high))
+        first_top.add_row([i + 1, curr, high])
         first_words_count_dict.pop(curr)
+    print(first_top)
 
     print("\nTop 30 most used words by {}:".format(second_name))
+    second_top = PrettyTable(["Number", "Word", "Count"])
     for i in range(30):
         high = max(second_words_count_dict.values())
         curr = list(second_words_count_dict.keys())[list(second_words_count_dict.values()).index(high)]
-        print("{:2}. {:10} ({})".format(i + 1, curr, high))
+        second_top.add_row([i + 1, curr, high])
         second_words_count_dict.pop(curr)
+    print(second_top)
 
     word_count_file = open("word_count.txt", "w")
     print(words_count_dict, file = word_count_file)
