@@ -221,21 +221,10 @@ def main():
     print("{:2.2f} average message length for {}.".format(first_total_words / first_total_msg, first_name))
     print("{:2.2f} average message length for {}.\n".format(second_total_words / second_total_msg, second_name))
 
-    print("Top 30 most used words:")
-    words_count_dict.pop("<media")              # Not very elegant, needs work.
-    words_count_dict.pop("omitted>")
-    first_words_count_dict.pop("<media")
+    first_words_count_dict.pop("<media")            # Not very elegant, needs work.
     first_words_count_dict.pop("omitted>")
     second_words_count_dict.pop("<media")
     second_words_count_dict.pop("omitted>")
-
-    top = PrettyTable(["Number", "Word", "Count"])
-    for i in range(30):
-        high = max(words_count_dict.values())
-        curr = list(words_count_dict.keys())[list(words_count_dict.values()).index(high)]
-        top.add_row([i + 1, curr, high])
-        words_count_dict.pop(curr)
-    print(top)
 
     first_top = PrettyTable(["Number", "Word", "Count"])
     print("\nTop 30 most used words by {}:".format(first_name))
