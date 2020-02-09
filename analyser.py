@@ -176,6 +176,9 @@ def get_common_words(file_list):
     return words_count_dict
 
 
+# Try out search used words feature.
+
+
 def main():
     file_name = input("Enter the name of the text file:\n")
 
@@ -247,6 +250,27 @@ def main():
     word_count_file = open("word_count.txt", "w")
     print(words_count_dict, file = word_count_file)
     word_count_file.close()
+
+    print("Search Function")
+    print("Options:\n0. quit\n1. Search words used by {}".format(first_name))
+    print("2. Search words used by {}".format(second_name))
+    resp = eval(input())
+    while resp != 0:
+        if resp == 1:
+            search_word = input("Enter the word you want to search for:\n")
+            try:
+                print("{} used '{}' {} times.".format(first_name, search_word, str(first_words_count_dict[search_word])))
+            except KeyError:
+                print("No occurrences of '{}' found".format(search_word))
+        else:
+            search_word = input("Enter the word you want to search for:\n")
+            try:
+                print("{} used '{}' {} times.".format(second_name, search_word, str(second_words_count_dict[search_word])))
+            except KeyError:
+                print("No occurrences of '{}' found".format(search_word))
+        print("Options:\n0. quit\n1. Search words used by {}".format(first_name))
+        print("2. Search words used by {}".format(second_name))
+        resp = eval(input())
 
 
 if __name__ == '__main__':
