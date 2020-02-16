@@ -176,9 +176,6 @@ def get_common_words(file_list):
     return words_count_dict
 
 
-# Try out search used words feature.
-
-
 def main():
     file_name = input("Enter the name of the text file:\n")
 
@@ -224,10 +221,13 @@ def main():
     print("{:2.2f} average message length for {}.".format(first_total_words / first_total_msg, first_name))
     print("{:2.2f} average message length for {}.\n".format(second_total_words / second_total_msg, second_name))
 
-    first_words_count_dict.pop("<media")            # Not very elegant, needs work.
-    first_words_count_dict.pop("omitted>")
-    second_words_count_dict.pop("<media")
-    second_words_count_dict.pop("omitted>")
+    try:
+        first_words_count_dict.pop("<media")            # Not very elegant, needs work.
+        first_words_count_dict.pop("omitted>")
+        second_words_count_dict.pop("<media")
+        second_words_count_dict.pop("omitted>")
+    except KeyError:
+        pass
 
     first_top = PrettyTable(["Number", "Word", "Count"])
     print("\nTop 30 most used words by {}:".format(first_name))
@@ -247,10 +247,8 @@ def main():
         second_words_count_dict.pop(curr)
     print(second_top)
 
-    word_count_file = open("word_count.txt", "w")
-    print(words_count_dict, file = word_count_file)
-    word_count_file.close()
-
+    # TODO Fix brother bug.
+    # brother is appearing in the full dictionary but not in the individual dictionaries.
     print("Search Function")
     print("Options:\n0. quit\n1. Search words used by {}".format(first_name))
     print("2. Search words used by {}".format(second_name))
@@ -261,16 +259,20 @@ def main():
             try:
                 print("{} used '{}' {} times.".format(first_name, search_word, str(first_words_count_dict[search_word])))
             except KeyError:
-                print("No occurrences of '{}' found".format(search_word))
+                print("{} never used the word '{}'.".format(first_name, search_word))
         else:
             search_word = input("Enter the word you want to search for:\n")
             try:
                 print("{} used '{}' {} times.".format(second_name, search_word, str(second_words_count_dict[search_word])))
             except KeyError:
-                print("No occurrences of '{}' found".format(search_word))
+                print("{} never used the word '{}'.".format(second_name, search_word))
         print("Options:\n0. quit\n1. Search words used by {}".format(first_name))
         print("2. Search words used by {}".format(second_name))
         resp = eval(input())
+
+    word_count_file = open("word_count.txt", "w")
+    print(first_words_count_dict, file=word_count_file)
+    word_count_file.close()
 
 
 if __name__ == '__main__':
