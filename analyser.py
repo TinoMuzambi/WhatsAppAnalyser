@@ -40,10 +40,11 @@ def extract_names(file_list):
     i = 2
     while first_name == second_name:
         i += 1
-        second = file_list[i]
-        second_name = second[20:]
-        pos = second_name.find(":")
-        second_name = second_name[:pos]
+        if file_list[i][0].isdigit():
+            second = file_list[i]
+            second_name = second[20:]
+            pos = second_name.find(":")
+            second_name = second_name[:pos]
 
 
 def get_msg_list(file_list):
