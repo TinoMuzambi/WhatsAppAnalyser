@@ -272,6 +272,7 @@ def main():
         resp = eval(input())
 
     word_count_file = open("word_count.txt", "w")
+    print(first_name)
     print(first_words_count_dict, file=word_count_file)
     word_count_file.close()
 
