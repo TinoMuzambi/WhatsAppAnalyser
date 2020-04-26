@@ -3,6 +3,7 @@
 # 26 November 2019
 import io
 from prettytable import PrettyTable
+import sys
 
 first_name = ""
 second_name = ""
@@ -178,7 +179,7 @@ def get_common_words(file_list):
 
 
 def main():
-    file_name = input("Enter the name of the text file:\n")
+    file_name = sys.argv[1]
 
     with io.open(file_name, "r", encoding="utf-8") as text:
         file_list = text.readlines()
@@ -195,17 +196,28 @@ def main():
     first_total_words = 0
     second_total_words = 0
     count = 0
+    lnum_words = -1
     for line in conv_file_list:
         if "<Media omitted>" not in line:
             if first_name in line:
                 count += 1
                 first_total_msg += 1
                 num_words = count_words(line, first_name)
+                if num_words > lnum_words:
+                    longest_msg = open("longest.txt", "w")
+                    lnum_words = num_words
+                    print(line, file = longest_msg)
+                    longest_msg.close()
                 first_total_words += num_words
             elif second_name in line:
                 count += 1
                 second_total_msg += 1
                 num_words = count_words(line, second_name)
+                if num_words > lnum_words:
+                    longest_msg = open("longest.txt", "w")
+                    lnum_words = num_words
+                    print(line, file = longest_msg)
+                    longest_msg.close()
                 second_total_words += num_words
 
     print("\n===========================================================================================\n")
