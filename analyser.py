@@ -3,6 +3,7 @@
 # 26 November 2019
 import io
 from prettytable import PrettyTable
+import sys
 
 first_name = ""
 second_name = ""
@@ -178,7 +179,7 @@ def get_common_words(file_list):
 
 
 def main():
-    file_name = input("Enter the name of the text file:\n")
+    file_name = sys.argv[1]
 
     with io.open(file_name, "r", encoding="utf-8") as text:
         file_list = text.readlines()
@@ -195,17 +196,28 @@ def main():
     first_total_words = 0
     second_total_words = 0
     count = 0
+    lnum_words = -1
     for line in conv_file_list:
         if "<Media omitted>" not in line:
             if first_name in line:
                 count += 1
                 first_total_msg += 1
                 num_words = count_words(line, first_name)
+                if num_words > lnum_words:
+                    longest_msg = open("longest.txt", "w")
+                    lnum_words = num_words
+                    print(line, file = longest_msg)
+                    longest_msg.close()
                 first_total_words += num_words
             elif second_name in line:
                 count += 1
                 second_total_msg += 1
                 num_words = count_words(line, second_name)
+                if num_words > lnum_words:
+                    longest_msg = open("longest.txt", "w")
+                    lnum_words = num_words
+                    print(line, file = longest_msg)
+                    longest_msg.close()
                 second_total_words += num_words
 
     print("\n===========================================================================================\n")
@@ -222,10 +234,13 @@ def main():
     print("{:2.2f} average message length for {}.".format(first_total_words / first_total_msg, first_name))
     print("{:2.2f} average message length for {}.\n".format(second_total_words / second_total_msg, second_name))
 
-    first_words_count_dict.pop("<media")            # Not very elegant, needs work.
-    first_words_count_dict.pop("omitted>")
-    second_words_count_dict.pop("<media")
-    second_words_count_dict.pop("omitted>")
+    try:
+        first_words_count_dict.pop("<media")            # Not very elegant, needs work.
+        first_words_count_dict.pop("omitted>")
+        second_words_count_dict.pop("<media")
+        second_words_count_dict.pop("omitted>")
+    except KeyError:
+        pass
 
     first_top = PrettyTable(["Number", "Word", "Count"])
     print("\nTop 30 most used words by {}:".format(first_name))
@@ -245,8 +260,32 @@ def main():
         second_words_count_dict.pop(curr)
     print(second_top)
 
+    # TODO Fix brother bug.
+    # brother is appearing in the full dictionary but not in the individual dictionaries.
+    print("Search Function")
+    print("Options:\n0. quit\n1. Search words used by {}".format(first_name))
+    print("2. Search words used by {}".format(second_name))
+    resp = eval(input())
+    while resp != 0:
+        if resp == 1:
+            search_word = input("Enter the word you want to search for:\n")
+            try:
+                print("{} used '{}' {} times.".format(first_name, search_word, str(first_words_count_dict[search_word])))
+            except KeyError:
+                print("{} never used the word '{}'.".format(first_name, search_word))
+        else:
+            search_word = input("Enter the word you want to search for:\n")
+            try:
+                print("{} used '{}' {} times.".format(second_name, search_word, str(second_words_count_dict[search_word])))
+            except KeyError:
+                print("{} never used the word '{}'.".format(second_name, search_word))
+        print("Options:\n0. quit\n1. Search words used by {}".format(first_name))
+        print("2. Search words used by {}".format(second_name))
+        resp = eval(input())
+
     word_count_file = open("word_count.txt", "w")
-    print(words_count_dict, file = word_count_file)
+    print(first_name)
+    print(first_words_count_dict, file=word_count_file)
     word_count_file.close()
 
 
