@@ -1,0 +1,7 @@
+Flask~=1.1.2
+gunicorn
+Jinja2
+requests
+Werkzeug~=1.0.1
+WTForms~=2.3.1
+prettytable~=0.7.2

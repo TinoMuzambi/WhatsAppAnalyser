@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Remove Contractions</title>
+</head>
+<body>
+<div class="form-holder">
+    <h1>WhatsApp Chat Analyser</h1>
+    <p>This Python script takes in an exported WhatsApp chat file and using string manipulation shows some statistics
+        about the chat in question.</p>
+    <div class="contents-center">
+        <h3>Enter your text here:</h3>
+        <form class="form-container" method=post action="">
+            <table class="elements">
+                {% for field in form %}
+                <tr class="element">
+                    <td class="string">{{ field }}</td>
+                    <td>
+                        <ul class="errors">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <p><input class="btn" type=submit value=Process></form>
+        </p>
+        <p class="output-container">
+            {% if result != None %}
+            Here's your uncontracted text:
+            <textarea readonly class="output-field">{{ result }}</textarea>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
