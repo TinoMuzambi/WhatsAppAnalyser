@@ -203,21 +203,21 @@ def main():
                 count += 1
                 first_total_msg += 1
                 num_words = count_words(line, first_name)
-                if num_words > lnum_words:
-                    longest_msg = open("longest.txt", "w")
-                    lnum_words = num_words
-                    print(line, file = longest_msg)
-                    longest_msg.close()
+                # if num_words > lnum_words:
+                #     longest_msg = open("longest.txt", "w")
+                #     lnum_words = num_words
+                #     print(line, file = longest_msg)
+                #     longest_msg.close()
                 first_total_words += num_words
             elif second_name in line:
                 count += 1
                 second_total_msg += 1
                 num_words = count_words(line, second_name)
-                if num_words > lnum_words:
-                    longest_msg = open("longest.txt", "w")
-                    lnum_words = num_words
-                    print(line, file = longest_msg)
-                    longest_msg.close()
+                # if num_words > lnum_words:
+                #     longest_msg = open("longest.txt", "w")
+                #     lnum_words = num_words
+                #     print(line, file = longest_msg)
+                #     longest_msg.close()
                 second_total_words += num_words
 
     print("\n===========================================================================================\n")
