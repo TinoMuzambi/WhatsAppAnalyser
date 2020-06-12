@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Remove Contractions</title>
+    <title>WhatsApp Chat Analyser</title>
 </head>
 <body>
 <div class="form-holder">
     <h1>WhatsApp Chat Analyser</h1>
     <p>This Python script takes in an exported WhatsApp chat file and using string manipulation shows some statistics
-        about the chat in question.</p>
+        about the chat in question. First head over to WhatsApp and export the chat you want analysed and make sure to
+        exclude media. Then copy the text of that file and paste it into the box below and click process.</p>
     <div class="contents-center">
-        <h3>Enter your text here:</h3>
+        <h3>Paste the text here:</h3>
         <form class="form-container" method=post action="">
             <table class="elements">
                 {% for field in form %}
@@ -31,7 +32,7 @@
         </p>
         <p class="output-container">
             {% if result != None %}
-            Here's your uncontracted text:
+            Here are your chat stats:
             <textarea readonly class="output-field">{{ result }}</textarea>
             {% endif %}
         </p>

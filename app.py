@@ -1,22 +1,18 @@
 # WhatsApp Chat Analyser
 # Tino Muzambi
 # 26 November 2019
-import io
-from prettytable import PrettyTable
-import sys
 from flask import Flask, render_template, request
+from prettytable import PrettyTable
 from wtforms import Form, TextAreaField, validators
 
-
 app = Flask(__name__)
+first_name = ""
+second_name = ""
 
 
 class InputForm(Form):
     chat = TextAreaField('Text', render_kw={"rows": 15, "cols": 100},
-                                 validators=[validators.InputRequired()])
-
-first_name = ""
-second_name = ""
+                         validators=[validators.InputRequired()])
 
 
 def extract_names(file_list):
@@ -24,7 +20,7 @@ def extract_names(file_list):
     Extract the names of the people in the chat for use in other parts of the program.
     :param file_list: list of text file contents.
     """
-    if "changed their phone number." in file_list[1]:       # Edge cases
+    if "changed their phone number." in file_list[1]:  # Edge cases
         first = file_list[2]
         second = file_list[3]
     elif not file_list[2][0].isdigit():
@@ -35,7 +31,7 @@ def extract_names(file_list):
             num += 1
             second = file_list[num]
     else:
-        first = file_list[1]                               # Else all goes well, and names are lines 2 & 3
+        first = file_list[1]  # Else all goes well, and names are lines 2 & 3
         second = file_list[2]
 
     global first_name
@@ -56,6 +52,8 @@ def extract_names(file_list):
             second_name = second[20:]
             pos = second_name.find(":")
             second_name = second_name[:pos]
+    first_name = first_name.strip(" ")
+    second_name = second_name.strip(" ")
 
 
 def get_msg_list(file_list):
@@ -66,7 +64,7 @@ def get_msg_list(file_list):
     """
     out_list = []
     i = -1
-    file_list = file_list[1:]           # Ignore first line.
+    file_list = file_list[1:]  # Ignore first line.
     for line in file_list:
         i += 1
         if first_name in line:
@@ -121,7 +119,7 @@ def rm_unwanted_chars(input_string):
     }
     """
     return input_string.encode('ascii', 'ignore').decode('ascii').strip(".").strip(",").strip("?").strip("!") \
-        .strip(":").strip(";").strip("(").strip(")").strip("-").strip("*").strip("_").strip("`").strip("[").strip("]")\
+        .strip(":").strip(";").strip("(").strip(")").strip("-").strip("*").strip("_").strip("`").strip("[").strip("]") \
         .strip("/").strip("\\").strip("{").strip("}")
 
 
@@ -236,6 +234,8 @@ def process_chat(chat_file):
                 #     longest_msg.close()
                 second_total_words += num_words
 
+    print(first_name)
+    print(second_name)
     chat_result += "\n===========================================================================================\n"
     chat_result += "WhatsApp chat statistics for conversation between {} and {}".format(first_name, second_name)
     chat_result += "\n===========================================================================================\n"
@@ -247,11 +247,13 @@ def process_chat(chat_file):
     chat_result += "{:6} total words for {}.".format(first_total_words, first_name) + "\n"
     chat_result += "{:6} total words for {}.\n".format(second_total_words, second_name) + "\n"
 
-    chat_result += "{:2.2f} average message length for {}.".format(first_total_words / first_total_msg, first_name) + "\n"
-    chat_result += "{:2.2f} average message length for {}.\n".format(second_total_words / second_total_msg, second_name) + "\n"
+    chat_result += "{:2.2f} average message length for {}.".format(first_total_words / first_total_msg,
+                                                                   first_name) + "\n"
+    chat_result += "{:2.2f} average message length for {}.\n".format(second_total_words / second_total_msg,
+                                                                     second_name) + "\n"
 
     try:
-        first_words_count_dict.pop("<media")            # Not very elegant, needs work.
+        first_words_count_dict.pop("<media")  # Not very elegant, needs work.
         first_words_count_dict.pop("omitted>")
         second_words_count_dict.pop("<media")
         second_words_count_dict.pop("omitted>")
