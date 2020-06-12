@@ -31,6 +31,9 @@ body {
 .form-holder .form-container .string {
     height: 200px;
 }
+.form-holder .demo {
+    width: 100%;
+}
 .form-holder .errors {
     color: red;
     list-style: none;
