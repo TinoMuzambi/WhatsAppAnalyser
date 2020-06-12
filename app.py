@@ -10,9 +10,19 @@ first_name = ""
 second_name = ""
 
 
+def checks(form, field):
+    """Form validation: failure if chat too short"""
+    chat = form.chat.data
+    chat = chat.split("\n")
+    if len(chat) < 60:
+        raise validators.ValidationError(
+            "Chat too short, please use a longer chat."
+        )
+
+
 class InputForm(Form):
     chat = TextAreaField('Text', render_kw={"rows": 15, "cols": 100},
-                         validators=[validators.InputRequired()])
+                         validators=[validators.InputRequired(), checks])
 
 
 def extract_names(file_list):
@@ -29,6 +39,9 @@ def extract_names(file_list):
         num = 3
         while not file_list[num].lstrip("\n")[0].isdigit():
             num += 1
+            if num == len(file_list):
+                raise validators.ValidationError(
+                    "You used a poorly formatted file. Please ensure you use an exported file from WhatsApp as is with media ommitted.")
             second = file_list[num]
     else:
         first = file_list[1]  # Else all goes well, and names are lines 2 & 3
@@ -47,6 +60,8 @@ def extract_names(file_list):
     i = 2
     while first_name == second_name:
         i += 1
+        if i == len(file_list) + 1:
+            raise validators.ValidationError("Poorly formatted file.")
         if file_list[i].lstrip("\n")[0].isdigit():
             second = file_list[i]
             second_name = second[20:]
