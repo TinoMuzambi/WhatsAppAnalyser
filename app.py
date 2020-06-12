@@ -27,7 +27,7 @@ def extract_names(file_list):
         first = file_list[1]
         second = file_list[3]
         num = 3
-        while not file_list[num][0].isdigit():
+        while not file_list[num].lstrip("\n")[0].isdigit():
             num += 1
             second = file_list[num]
     else:
