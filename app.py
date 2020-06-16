@@ -41,7 +41,8 @@ def extract_names(file_list):
             num += 1
             if num == len(file_list):
                 raise validators.ValidationError(
-                    "You used a poorly formatted file. Please ensure you use an exported file from WhatsApp as is with media ommitted.")
+                    "You used a poorly formatted file. Please ensure you use an exported file from WhatsApp as is "
+                    "with media ommitted.")
             second = file_list[num]
     else:
         first = file_list[1]  # Else all goes well, and names are lines 2 & 3
