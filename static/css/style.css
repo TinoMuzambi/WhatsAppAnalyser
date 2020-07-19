@@ -1,11 +1,93 @@
+/*  font-family: Abel  */
+@font-face {
+  font-family: Abel;
+  src: url('./fonts/Abel/Abel-Regular.ttf');
+}
+
+/*  font-family: Anton  */
+@font-face {
+  font-family: Anton;
+  src: url('./fonts/Anton/Anton-Regular.ttf');
+}
+
+/*  font-family: Josefin  */
+@font-face {
+  font-family: Josefin;
+  src: url('./fonts/Josefin_Sans/JosefinSans-Regular.ttf');
+}
+
+/*  font-family: Lexend  */
+@font-face {
+  font-family: Lexend;
+  src: url('./fonts/Lexend_Deca/LexendDeca-Regular.ttf');
+}
+
+/*  font-family: Livvic  */
+@font-face {
+  font-family: Livvic;
+  src: url('./fonts/Livvic/Livvic-Regular.ttf');
+}
+
+/* ---------------- Global Classes ---------------*/
+
+a{
+  text-decoration: none;
+  color: var(--text-gray);
+}
+
+h1{
+  font-family: var(--Lexend), "Verdana";
+  font-size: 2.5rem;
+}
+
+h2{
+  font-family: var(--Lexend), "Verdana";
+}
+
+h3{
+  font-family: var(--Abel), "Verdana";
+  font-size: 1.3rem;
+}
+
+.btn {
+  border: none;
+  border-radius: 2rem;
+  padding: 1rem 3rem;
+  font-size: 1rem;
+  font-family: var(--Livvic), "Verdana";
+  cursor: pointer;
+}
+
+.text-gray{
+  color: var(--text-gray);
+}
+
+p{
+  font-family: var(--Lexend), "Verdana";
+  color: var(--text-light);
+}
+
 html, body {
     margin: 0;
     padding: 0;
     position: absolute;
     width: 100%;
-    font-family: "Verdana", sans-serif;
     background: url("../bg.png") no-repeat;
     background-size: cover;
+
+    /*      Theme colors        */
+  --text-gray: #3f4954;
+  --text-light : #686666da;
+  --bg-color: #0f0f0f;
+  --white: #ffffff;
+  --midnight: #a1c4cf;
+
+    /*      theme font-family   */
+  --Abel: 'Abel', sans-serif;
+  --Anton: 'Anton', sans-serif;
+  --Josefin : 'Josefin', sans-serif;
+  --Lexend: 'Lexend', sans-serif;
+  --Livvic : 'Livvic', sans-serif;
 }
 .form-holder {
     position: relative;
@@ -40,13 +122,13 @@ html, body {
     color: red;
     list-style: none;
 }
-.form-holder .btn {
-    background: transparent;
-    border: solid 2px;
-    border-radius: 0%;
-    left: 40px;
-    width: 100px;
-}
+/*.form-holder .btn {*/
+/*    background: transparent;*/
+/*    border: solid 2px;*/
+/*    border-radius: 0%;*/
+/*    left: 40px;*/
+/*    width: 100px;*/
+/*}*/
 .form-holder .btn:hover {
     cursor: pointer;
     opacity: 50%;
