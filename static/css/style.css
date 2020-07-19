@@ -144,3 +144,11 @@ html, body {
     border: none;
     outline: none;
 }
+
+/*              Viewport less then or equal to 520px            */
+
+@media only screen and (max-width: 520px){
+  html {
+      background: url(../bg-phone.png) no-repeat;
+  }
+}
