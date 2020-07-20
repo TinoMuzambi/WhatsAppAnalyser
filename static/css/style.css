@@ -49,15 +49,6 @@ h3{
   font-size: 1.3rem;
 }
 
-.btn {
-  border: none;
-  border-radius: 2rem;
-  padding: 1rem 3rem;
-  font-size: 1rem;
-  font-family: var(--Livvic), "Verdana";
-  cursor: pointer;
-}
-
 .text-gray{
   color: var(--text-gray);
 }
@@ -70,10 +61,8 @@ p{
 html, body {
     margin: 0;
     padding: 0;
-    position: absolute;
     width: 100%;
-    background: url("../bg.png") no-repeat;
-    background-size: cover;
+    background: url("../bg.png");
 
     /*      Theme colors        */
   --text-gray: #3f4954;
@@ -89,6 +78,7 @@ html, body {
   --Lexend: 'Lexend', sans-serif;
   --Livvic : 'Livvic', sans-serif;
 }
+
 .form-holder {
     position: relative;
     top: 1%;
@@ -122,14 +112,15 @@ html, body {
     color: red;
     list-style: none;
 }
-/*.form-holder .btn {*/
-/*    background: transparent;*/
-/*    border: solid 2px;*/
-/*    border-radius: 0%;*/
-/*    left: 40px;*/
-/*    width: 100px;*/
-/*}*/
-.form-holder .btn:hover {
+.custom-btn {
+  border: none;
+  border-radius: 2rem;
+  padding: 1rem 3rem;
+  font-size: 1rem;
+  font-family: var(--Livvic), "Verdana";
+  cursor: pointer;
+}
+.custom-btn:hover {
     cursor: pointer;
     opacity: 50%;
 }
@@ -145,12 +136,3 @@ html, body {
     outline: none;
 }
 
-/*              Viewport less then or equal to 520px            */
-
-@media only screen and (max-width: 520px){
-
-  html {
-      background: url(../bg-phone.png) no-repeat;
-  }
-
-}
