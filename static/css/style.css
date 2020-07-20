@@ -110,6 +110,7 @@ html, body {
 }
 .form-holder .errors {
     color: red;
+    font-family: var(--Livvic);
     list-style: none;
 }
 .custom-btn {
