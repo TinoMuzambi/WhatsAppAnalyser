@@ -1,5 +1,3 @@
-*.txt
-./venv
-./.idea
-*.jpg
-*.png
+.DS_Store
+.vercel/
+node_modules/

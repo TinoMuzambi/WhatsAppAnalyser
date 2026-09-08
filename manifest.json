@@ -1,5 +1,11 @@
 {
- "name": "App",
+ "name": "Chatfold — WhatsApp Chat Analyser",
+ "short_name": "Chatfold",
+ "description": "Private, in-browser statistics for exported WhatsApp chats.",
+ "start_url": "/",
+ "display": "standalone",
+ "background_color": "#101713",
+ "theme_color": "#101713",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
