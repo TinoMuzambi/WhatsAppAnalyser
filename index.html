@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Private, in-browser statistics for exported WhatsApp chats.">
+    <meta name="theme-color" content="#101713">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="manifest" href="/manifest.json">
+    <title>Chatfold — private WhatsApp chat analysis</title>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="wordmark" href="/" aria-label="Chatfold home">
+        <span aria-hidden="true">CF</span>
+        Chatfold
+      </a>
+      <p><span class="status-dot" aria-hidden="true"></span> Local-only analysis</p>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="kicker">Conversation intelligence, without surveillance</p>
+        <h1 id="page-title">Find the shape of your chat.</h1>
+        <p class="hero-copy">Open an exported WhatsApp conversation and turn it into useful, human-readable statistics. Everything runs here in your browser—nothing is uploaded.</p>
+        <ul class="privacy-list" aria-label="Privacy guarantees">
+          <li>No accounts</li>
+          <li>No analytics</li>
+          <li>No network requests</li>
+        </ul>
+      </section>
+
+      <section class="input-panel" aria-labelledby="input-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-number">01 / Source</p>
+            <h2 id="input-title">Bring your export</h2>
+          </div>
+          <button class="text-button" id="sample-button" type="button">Try sample data</button>
+        </div>
+
+        <label class="file-picker" for="file-input">
+          <span class="file-icon" aria-hidden="true">TXT</span>
+          <span><strong>Open an exported chat</strong><small id="file-name">Choose a .txt file up to 10 MB</small></span>
+          <input id="file-input" type="file" accept=".txt,text/plain">
+        </label>
+
+        <div class="or" aria-hidden="true"><span>or paste the text</span></div>
+
+        <form id="analysis-form">
+          <label class="sr-only" for="chat-input">Exported WhatsApp chat</label>
+          <textarea id="chat-input" rows="12" maxlength="5000000" spellcheck="false" placeholder="[01/08/2026, 09:42] Alex: Morning!&#10;[01/08/2026, 09:43] Sam: I’ll bring coffee."></textarea>
+          <div class="form-footer">
+            <p>Common Android and iOS export formats supported.</p>
+            <button class="primary-button" type="submit">Analyse locally <span aria-hidden="true">↗</span></button>
+          </div>
+          <p class="error" id="error-message" role="alert" hidden></p>
+        </form>
+      </section>
+
+      <section class="results" id="results" aria-labelledby="results-title" hidden>
+        <div class="section-heading results-heading">
+          <div>
+            <p class="section-number">02 / Findings</p>
+            <h2 id="results-title">The conversation at a glance</h2>
+          </div>
+          <button class="text-button" id="clear-button" type="button">Clear private data</button>
+        </div>
+
+        <div class="stat-grid" id="stat-grid"></div>
+
+        <div class="detail-grid">
+          <article class="data-card">
+            <div class="card-heading">
+              <h3>Contributors</h3>
+              <span>Messages</span>
+            </div>
+            <ol class="rank-list" id="participants-list"></ol>
+          </article>
+
+          <article class="data-card">
+            <div class="card-heading">
+              <h3>Vocabulary</h3>
+              <span>Top words</span>
+            </div>
+            <ol class="word-list" id="word-list"></ol>
+          </article>
+
+          <article class="data-card activity-card">
+            <div class="card-heading">
+              <h3>Daily rhythm</h3>
+              <span>By hour</span>
+            </div>
+            <div class="hour-list" id="hour-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="how-to" aria-labelledby="how-title">
+        <p class="section-number">03 / How it works</p>
+        <h2 id="how-title">Export. Open. Explore.</h2>
+        <ol>
+          <li><strong>Export without media</strong><span>In WhatsApp, open a chat’s menu and choose “Export chat.”</span></li>
+          <li><strong>Open the text file</strong><span>Select it above or paste its contents. Group chats work too.</span></li>
+          <li><strong>Read your dashboard</strong><span>The file stays in memory and disappears when you close or clear the page.</span></li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built by <a href="https://github.com/TinoMuzambi" rel="noreferrer">Tino Muzambi</a>. Not affiliated with WhatsApp or Meta.</p>
+      <a href="https://github.com/TinoMuzambi/WhatsAppAnalyser" rel="noreferrer">View source</a>
+    </footer>
+
+    <script type="module" src="/static/app.mjs"></script>
+  </body>
+</html>
