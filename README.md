@@ -2,7 +2,7 @@
 
 A privacy-first, browser-based dashboard for exploring exported WhatsApp conversations. Parsing and analysis happen entirely on the device: chat text is never uploaded or stored.
 
-**Live app:** [whatsapp-analyser.vercel.app](https://whatsapp-analyser.vercel.app)
+**Live app:** [chatfold.vercel.app](https://chatfold.vercel.app)
 
 ## Features
 
