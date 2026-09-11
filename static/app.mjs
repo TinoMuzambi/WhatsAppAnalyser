@@ -1,4 +1,7 @@
 import { analyseChat, ChatFormatError } from "./analyser.mjs";
+import { analysisJson, participantCsv, downloadText } from "./export.mjs";
+import { initCommerce } from "./commerce.mjs";
+let currentAnalysis = null;
 
 const form = document.querySelector("#analysis-form");
 const input = document.querySelector("#chat-input");
@@ -112,6 +115,7 @@ function renderHours(hours) {
 }
 
 function showError(message) {
+  currentAnalysis = null;
   errorMessage.textContent = message;
   errorMessage.hidden = false;
   results.hidden = true;
@@ -121,6 +125,7 @@ function runAnalysis() {
   errorMessage.hidden = true;
   try {
     const analysis = analyseChat(input.value);
+    currentAnalysis = analysis;
     renderStats(analysis.summary);
     renderParticipants(analysis.participants);
     renderWords(analysis.topWords);
@@ -166,6 +171,12 @@ document.querySelector("#sample-button").addEventListener("click", () => {
 });
 
 document.querySelector("#clear-button").addEventListener("click", () => {
+  currentAnalysis = null;
+  for (const selector of ["#stat-grid", "#participants-list", "#word-list", "#hour-list"]) {
+    document.querySelector(selector).replaceChildren();
+  }
+  document.querySelector("#report-title").value = "Our conversation";
+  document.querySelector("#report-dedication").value = "";
   input.value = "";
   fileInput.value = "";
   fileName.textContent = "Choose a .txt file up to 10 MB";
@@ -174,3 +185,15 @@ document.querySelector("#clear-button").addEventListener("click", () => {
   input.focus();
   window.scrollTo({ top: document.querySelector("#input-title").offsetTop, behavior: "smooth" });
 });
+
+// Export handlers read memory only. Private text never enters a payment request.
+document.querySelector("#export-json").addEventListener("click", () => {
+  if (currentAnalysis) downloadText(analysisJson(currentAnalysis), "chatfold-analysis.json", "application/json");
+});
+document.querySelector("#export-csv").addEventListener("click", () => {
+  if (currentAnalysis) downloadText(participantCsv(currentAnalysis), "chatfold-contributors.csv", "text/csv;charset=utf-8");
+});
+document.querySelector("#export-source").addEventListener("click", () => {
+  if (currentAnalysis) downloadText(input.value, "chatfold-original.txt", "text/plain;charset=utf-8");
+});
+initCommerce(() => currentAnalysis);
