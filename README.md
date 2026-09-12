@@ -2,7 +2,7 @@
 
 Private WhatsApp-export analysis, free data exports, and an optional original keepsake design pack sold through Tinotech’s Paystack merchant account.
 
-Live at [chatfold.tinotech.co.za](https://chatfold.tinotech.co.za). The original Vercel address remains available for existing browser access and receipt recovery.
+Netlify production is available at [chatfold-tinotech.netlify.app](https://chatfold-tinotech.netlify.app). The branded address [chatfold.tinotech.co.za](https://chatfold.tinotech.co.za) is bound for coordinated DNS cutover. The original Vercel address remains available for existing browser access and receipt recovery.
 
 Chat text, contributor names, titles and dedications stay in browser memory. Free JSON, CSV and original-text downloads never require payment. A R79 once-off purchase unlocks two original printable designs. Buyers download a self-contained HTML report and save it as PDF from their browser. This is a pricing experiment, not evidence of validated demand or earned revenue.
 
