@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { createNetlifyHandler } from "../_server/netlify-adapter.mjs";
 import { createOrder, config } from "../_server/billing.mjs";
+import { gzipSync } from "node:zlib";
 
 const env = { NODE_ENV:"production", PAYSTACK_SECRET_KEY:"sk_test_"+"t".repeat(32), PAYSTACK_ALLOW_TEST_MODE:"true", CHATFOLD_UNLOCK_SECRET:"s".repeat(48), CHATFOLD_APP_URL:"https://chatfold.tinotech.co.za", CHATFOLD_ADDITIONAL_ORIGINS:'["https://legacy-chatfold.example"]', CHATFOLD_TEMPLATE_HTML:'<!doctype html><title>{{title}}</title><!--'+"private-design-fixture".repeat(260)+'-->' };
 function request(action, body, { origin=env.CHATFOLD_APP_URL, cookies, headers={} }={}) {
@@ -37,13 +38,15 @@ describe("Netlify native function adapter",()=>{
     }
   });
   it("preserves two distinct Set-Cookie headers on restore and gates a >4KB design after fresh verification",async()=>{
-    const order=createOrder("buyer@example.com",config(env));const handle=createNetlifyHandler({env,fetcher:provider(order)});
+    for (const templateEnv of [env, {...env,CHATFOLD_TEMPLATE_HTML:undefined,CHATFOLD_TEMPLATE_GZIP_BASE64:gzipSync(env.CHATFOLD_TEMPLATE_HTML).toString("base64")}]) {
+    const order=createOrder("buyer@example.com",config(templateEnv));const handle=createNetlifyHandler({env:templateEnv,fetcher:provider(order)});
     assert.ok(Buffer.byteLength(env.CHATFOLD_TEMPLATE_HTML)>4096);
     assert.equal((await handle(request("template"))).status,401);
     const restored=await handle(request("restore",{email:order.email,reference:order.reference}));assert.equal(restored.status,200);
     const cookies=restored.headers.getSetCookie();assert.equal(cookies.length,2);assert.match(cookies[0],/^__Host-chatfold-access=/);assert.match(cookies[1],/^__Host-chatfold-pending=;.*Max-Age=0/);
     const delivered=await handle(request("template",undefined,{cookies:cookies[0].split(";")[0]}));assert.equal(delivered.status,200);assert.equal((await delivered.json()).template,env.CHATFOLD_TEMPLATE_HTML);
-    const denied=createNetlifyHandler({env,fetcher:provider(order,"abandoned")});assert.equal((await denied(request("template",undefined,{cookies:cookies[0].split(";")[0]}))).status,403);
+    const denied=createNetlifyHandler({env:templateEnv,fetcher:provider(order,"abandoned")});assert.equal((await denied(request("template",undefined,{cookies:cookies[0].split(";")[0]}))).status,403);
+    }
   });
   it("retains unbound callback, unrelated-origin, bad-method and path denials",async()=>{
     const handle=createNetlifyHandler({env,fetcher:async()=>{throw new Error("Provider should not be called");}});

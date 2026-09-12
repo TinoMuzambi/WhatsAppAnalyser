@@ -33,10 +33,13 @@ Server-only settings:
 | `CHATFOLD_APP_URL` | Exact canonical HTTPS origin, `https://chatfold.tinotech.co.za` |
 | `CHATFOLD_ADDITIONAL_ORIGINS` | Optional JSON array of at most five explicitly trusted old origins; preserve `https://whatsapp-analyser-gilt-omega.vercel.app` for old browser access and receipt recovery |
 | `CHATFOLD_TEMPLATE_HTML` | Complete UTF-8 original template from the private Tinotech repository |
+| `CHATFOLD_TEMPLATE_GZIP_BASE64` | Optional lossless gzip/base64 version of the same private template for hosts with per-variable length limits; at most 5,000 characters, server-only secret |
 | `PAYSTACK_ALLOW_TEST_MODE` | Explicit staging override for test keys on a production-mode runtime; leave false for the customer site |
 | `CHATFOLD_REVOKED_REFERENCES` | Optional comma-separated manually suspended receipt references |
 
 The original template lives in the private `tinotech-co-za/tinotech` repository at `private-assets/chatfold/keepsake.html`. Provision its complete contents as `CHATFOLD_TEMPLATE_HTML`; do not copy the template into this public repository. CI uses a deliberately plain template fixture to test the renderer and billing boundary.
+
+On Netlify, use `CHATFOLD_TEMPLATE_GZIP_BASE64` because its per-variable limit is 5,000 characters. Gzip the UTF-8 file and base64-encode those bytes without line wrapping; keep the result secret. This preserves the original design and decodes only inside the server handler. Decompression is bounded to 60,000 bytes and malformed configuration disables checkout. Configure one template format; the existing plaintext value takes precedence when both are present.
 
 `CHATFOLD_UNLOCK_SECRET` signs historical order metadata as well as browser claims. Preserve it for receipt restoration. Rotating it invalidates receipts signed with the previous secret; plan a versioned migration before rotation and retain the old value securely if existing purchases need support.
 

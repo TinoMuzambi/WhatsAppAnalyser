@@ -6,9 +6,11 @@ The adapter bounds streamed payment request bodies to 2 KB, preserves separate `
 
 ## Private design and configuration
 
-Save the exact existing `CHATFOLD_TEMPLATE_HTML`, `CHATFOLD_UNLOCK_SECRET` and `TINOTECH_PAYMENTS_TOKEN` as secret variables in the owned Netlify site's deployment environment. Do not rotate them as part of hosting migration. The original design must remain in private source storage and runtime configuration; never copy it into this public repository, `dist`, function source, or a browser bundle.
+Save the exact existing `CHATFOLD_UNLOCK_SECRET` and `TINOTECH_PAYMENTS_TOKEN` as secret variables in the owned Netlify site's deployment environment. Do not rotate them as part of hosting migration. Provision the original private template through `CHATFOLD_TEMPLATE_GZIP_BASE64`: gzip its UTF-8 bytes, then base64-encode without line wrapping. The 5,957-byte original exceeds Netlify's 5,000-character per-variable cap; its lossless encoded form is 3,188 characters. Compression changes storage only; receipt verification and the delivered design stay the same. The original design and its encoded form must remain in private source storage and runtime configuration; never copy either into this public repository, `dist`, function source, or a browser bundle.
 
 This function uses Netlify's native Request/Response API, not Lambda compatibility. Netlify documents that native functions do not have the Lambda compatibility API's 4 KB aggregate environment limit. The original template is loaded only when the server handles a request. Free accounts cannot restrict variables to the Functions scope, so retain the explicit public build allowlist and review any future build tooling before granting it secret access.
+
+Secret variables use the `builds`, `functions` and `runtime` scopes; Netlify rejects secrets in `post-processing`. Set the values for both `production` and `deploy-preview`. If using the fixed `migration-qa` alias, also set values for that exact branch (`context: "branch", context_parameter: "migration-qa"`). The CLI alias creates a `branch-deploy` even with a preview build context; inspect the resulting deployment metadata and require `published_at: null`. The server rejects malformed gzip/base64, encoded input over 5,000 characters or decompressed output over 60,000 bytes. Existing Vercel plaintext configuration remains supported.
 
 Preserve these public settings at cutover:
 
