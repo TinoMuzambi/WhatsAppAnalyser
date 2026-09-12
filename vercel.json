@@ -30,5 +30,10 @@
     "api/commerce.js": {
       "maxDuration": 30
     }
+  },
+  "git": {
+    "deploymentEnabled": {
+      "master": false
+    }
   }
 }

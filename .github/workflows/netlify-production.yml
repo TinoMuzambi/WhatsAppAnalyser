@@ -1,0 +1,40 @@
+name: Netlify Production Release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: chatfold-netlify-production
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Validate the release source and publication guards
+        run: |
+          npm run check
+          python3 -m unittest discover -s .github/scripts -p 'test_netlify_release.py'
+      - name: Build an unpublished candidate with Production configuration
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: e75ec399-552d-4f46-ae74-41d885179082
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN"
+          npm exec --yes --package=netlify-cli@26.2.0 -- netlify deploy --context production --json > "$RUNNER_TEMP/netlify-production.json"
+      - name: Check hosted assets, private files, origins and unpaid access
+        run: python3 .github/scripts/netlify-release.py "$RUNNER_TEMP/netlify-production.json" --check
+      - name: Check the live gateway and publish the exact current candidate
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          TINOTECH_PAYMENTS_TOKEN: ${{ secrets.TINOTECH_PAYMENTS_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/netlify-release.py "$RUNNER_TEMP/netlify-production.json"

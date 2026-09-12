@@ -19,3 +19,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm run check
+
+      - name: Verify release authorization guards
+        run: python3 -m unittest discover -s .github/scripts -p 'test_netlify_release.py'
