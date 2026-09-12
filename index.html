@@ -158,13 +158,14 @@
             <p class="small-copy">After purchase, analyse a chat above and download your design. Keep the downloaded file; it works offline.</p>
           </form>
         </div>
-        <details class="restore-details">
+        <details class="restore-details" id="restore-purchase">
           <summary>Already paid? Restore your purchase</summary>
           <form id="restore-form" class="restore-form">
             <div><label for="restore-email">Receipt email</label><input type="email" id="restore-email" autocomplete="email" maxlength="254" required></div>
             <div><label for="restore-reference">Payment reference</label><input id="restore-reference" maxlength="41" placeholder="chatfold-…" required autocapitalize="none" spellcheck="false"></div>
             <button class="primary-button" type="submit">Restore purchase</button>
           </form>
+          <p id="legacy-purchase-help" class="small-copy">If an earlier purchase is not recognised here, <a href="https://whatsapp-analyser-gilt-omega.vercel.app/#restore-purchase" target="_blank" rel="noopener noreferrer">restore it on the original Chatfold site</a> or contact support below. Do not buy the pack again. The link opens a new tab without transferring your chat or receipt details.</p>
           <p class="small-copy">Use your Chatfold reference and email from the Paystack receipt. Keep them private. Need help? <a href="mailto:info@tinotech.co.za">Contact support</a> with your receipt reference, without sending your chat.</p>
         </details>
       </section>
