@@ -53,6 +53,15 @@ describe("product-bound receipts",()=>{
     const order=createOrder("alex@example.com",cfg);order.amount=6900;order.signature=signOrder(order,cfg.secret);
     assert.equal(verifyTransaction(transaction(order),order.reference,order.email,cfg).amount,6900);
   });
+  it("keeps receipts bound to their issuing secret while an unchanged original host can still restore them",()=>{
+    const earlier=createOrder("alex@example.com",cfg);
+    const migrated={...cfg,secret:"new-host-only-secret-"+"n".repeat(48)};
+    assert.throws(()=>verifyTransaction(transaction(earlier),earlier.reference,earlier.email,migrated));
+    assert.equal(verifyTransaction(transaction(earlier),earlier.reference,earlier.email,cfg).reference,earlier.reference);
+    const current=createOrder(earlier.email,migrated);
+    assert.equal(verifyTransaction(transaction(current),current.reference,current.email,migrated).reference,current.reference);
+    assert.throws(()=>verifyTransaction(transaction(current),current.reference,current.email,cfg));
+  });
   it("rejects refunded/disputed receipts and malformed provider status responses",async()=>{
     const order=createOrder("alex@example.com",cfg);
     for(const status of ["refund","dispute","malformed"]){

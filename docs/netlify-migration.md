@@ -29,4 +29,10 @@ A draft deployment without credentials must keep free analysis/exports working, 
 
 Before production cutover, verify the configured hosted payment lifecycle, original-design protection, old receipt restoration and both stable hosts. Keep DNS and existing production keys unchanged until that acceptance is recorded. Netlify Free has a shared hard usage allowance; track account credits before production releases.
 
+## Recovery when original secrets cannot be retrieved
+
+On 12 September 2026 the owner explicitly authorized new Netlify product/unlock values after supported Vercel retrieval returned no Sensitive values. This is an exception to the preservation-first migration procedure above. Keep the original Vercel unlock secret unchanged and keep its owned origin available for receipts it issued. The gateway must accept both the unchanged original product token and the new Netlify token during this transition.
+
+New Netlify receipts and existing Vercel receipts remain bound to their issuing unlock secret; do not accept an unsigned receipt or skip provider verification to bridge them. The restore form links to `https://whatsapp-analyser-gilt-omega.vercel.app/#restore-purchase` in a new tab without adding the email/reference to the URL. Failed callbacks open the restore section. Earlier buyers should use that original site or contact `info@tinotech.co.za`, without purchasing again. Do not retire the original host until a separate versioned receipt migration or support fulfillment process is verified.
+
 References: [native functions](https://docs.netlify.com/build/functions/overview/), [runtime environment variables](https://docs.netlify.com/build/functions/environment-variables/), [function configuration](https://docs.netlify.com/build/functions/configuration/).

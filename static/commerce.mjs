@@ -4,6 +4,11 @@ export function initCommerce(getAnalysis) {
   const message = document.querySelector("#purchase-message");
   const purchaseButton = document.querySelector("#purchase-button");
   const reportButton = document.querySelector("#report-button");
+  const restoreDetails = document.querySelector("#restore-purchase");
+  const legacyHelp = document.querySelector("#legacy-purchase-help");
+  // Keep receipt entry in this tab; the recovery link carries no private values.
+  legacyHelp.hidden = location.origin === new URL(legacyHelp.querySelector("a").href).origin;
+  if (location.hash === "#restore-purchase") restoreDetails.open = true;
   let available = false;
   let unlocked = false;
   let busy = false;
@@ -54,7 +59,7 @@ export function initCommerce(getAnalysis) {
       const result = await request("restore", { email: document.querySelector("#restore-email").value,
         reference: document.querySelector("#restore-reference").value.trim() });
       unlocked = result.unlocked; say("Purchase restored. Analyse a chat, then download either keepsake design.");
-    } catch (error) { say(error.message, true); }
+    } catch (error) { restoreDetails.open = true; say(error.message, true); }
     finally { busy = false; buttons(); }
   });
   document.querySelector("#report-form").addEventListener("submit", async event => {
@@ -83,7 +88,7 @@ export function initCommerce(getAnalysis) {
         const result = await request("verify", { reference });
         unlocked = result.unlocked; available = true;
         say(`Payment verified. Reference: ${result.reference}. Return to your original tab to keep using its chat, or open an export above.`);
-      } catch (error) { say(error.message, true); }
+      } catch (error) { restoreDetails.open = true; say(error.message, true); }
       finally { busy = false; buttons(); }
     } else await refresh();
   }
