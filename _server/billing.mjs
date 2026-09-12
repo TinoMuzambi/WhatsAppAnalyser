@@ -25,18 +25,27 @@ export function config(env = process.env) {
   const secret = env.CHATFOLD_UNLOCK_SECRET?.trim() || "";
   const production = env.NODE_ENV === "production" || env.VERCEL_ENV === "production";
   let origin;
+  let origins;
   try {
-    const url = new URL(env.CHATFOLD_APP_URL || "");
-    if (url.username || url.password || url.search || url.hash || url.pathname !== "/") throw new Error();
-    const local = ["localhost", "127.0.0.1"].includes(url.hostname);
-    if (url.protocol !== "https:" && !(url.protocol === "http:" && local && !production)) throw new Error();
-    origin = url.origin;
+    const parseOrigin = value => {
+      if (typeof value !== "string") throw new Error();
+      const url = new URL(value);
+      if (url.username || url.password || url.search || url.hash || url.pathname !== "/" || url.hostname.includes("*")) throw new Error();
+      const local = ["localhost", "127.0.0.1"].includes(url.hostname);
+      if (url.protocol !== "https:" && !(url.protocol === "http:" && local && !production)) throw new Error();
+      return url.origin;
+    };
+    origin = parseOrigin(env.CHATFOLD_APP_URL || "");
+    const additional = JSON.parse(env.CHATFOLD_ADDITIONAL_ORIGINS || "[]");
+    if (!Array.isArray(additional) || additional.length > 5) throw new Error();
+    origins = new Set([origin, ...additional.map(parseOrigin)]);
+    if ([...origins].some(value => new URL(value).protocol !== new URL(origin).protocol)) throw new Error();
   } catch { origin = null; }
   if (!mode || key.length < 20 || secret.length < 32 || !origin ||
       (production && mode === "test" && env.PAYSTACK_ALLOW_TEST_MODE !== "true")) {
     throw new BillingError("Purchases are not available yet. Free analysis and exports still work.", 503);
   }
-  return { key, providerUrl, secret, mode, origin, secure: origin.startsWith("https:"),
+  return { key, providerUrl, secret, mode, origin, origins, secure: origin.startsWith("https:"),
     revoked: new Set((env.CHATFOLD_REVOKED_REFERENCES || "").split(",").map(s => s.trim()).filter(Boolean)) };
 }
 export function emailAddress(value) {

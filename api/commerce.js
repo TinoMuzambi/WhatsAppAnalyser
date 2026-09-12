@@ -20,7 +20,7 @@ export function createHandler({ env = process.env, fetcher = fetch } = {}) {
         throw error;
       }
       if (req.headers["sec-fetch-site"] === "cross-site" ||
-          (req.method === "POST" && req.headers.origin !== cfg.origin)) {
+          (req.method === "POST" && !cfg.origins.has(req.headers.origin))) {
         throw new BillingError("Open Chatfold directly and try again.", 403);
       }
       const access = readToken(getCookie(req, "access", cfg), "access", cfg);
@@ -43,7 +43,7 @@ export function createHandler({ env = process.env, fetcher = fetch } = {}) {
         const order = createOrder(body.email, cfg);
         const data = await provider("/transaction/initialize", cfg, { fetcher, body: {
           amount: order.amount, email: order.email, currency: order.currency, reference: order.reference,
-          callback_url: `${cfg.origin}/?payment=return`, metadata: { product: PRODUCT, order },
+          callback_url: `${req.headers.origin}/?payment=return`, metadata: { product: PRODUCT, order },
         } });
         let url;
         try { url = new URL(data.authorization_url); } catch { throw new BillingError("The payment provider returned an invalid checkout.", 502); }

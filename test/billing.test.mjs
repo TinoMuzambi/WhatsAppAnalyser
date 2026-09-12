@@ -32,6 +32,11 @@ describe("payment configuration",()=>{
     assert.equal((await call("status",{customEnv:{...env,CHATFOLD_TEMPLATE_HTML:undefined}})).data.available,false);
     assert.equal((await call("checkout",{body:{email:"a@example.com"},customEnv:{}})).statusCode,503);
   });
+  it("only accepts a bounded explicit list of complete compatible origins",()=>{
+    for (const value of ['["https://chatfold.test/path"]', '["https://user:pass@chatfold.test"]', '["https://chatfold.test/?x=1"]', '["https://chatfold.test/#fragment"]', '["https://*.chatfold.test"]', '["http://localhost:3000"]', '[null]', '{}', 'not json', JSON.stringify(Array(6).fill("https://legacy.test"))]) {
+      assert.throws(()=>config({...env,CHATFOLD_ADDITIONAL_ORIGINS:value}),value);
+    }
+  });
 });
 describe("product-bound receipts",()=>{
   it("uses 128-bit references allowed by Paystack and canonical email",()=>{
@@ -91,6 +96,33 @@ describe("HTTP commerce boundary",()=>{
   it("rejects attacker checkout URLs",async()=>{
     const fetcher=async(url,options)=>reply({authorization_url:"https://checkout.paystack.com.evil.test/pay",reference:JSON.parse(options.body).reference});
     assert.equal((await call("checkout",{body:{email:"alex@example.com"},fetcher})).statusCode,502);
+  });
+  it("keeps old and new domain checkout callbacks on their starting origin",async()=>{
+    const customEnv={...env,CHATFOLD_APP_URL:"https://chatfold.tinotech.co.za",CHATFOLD_ADDITIONAL_ORIGINS:JSON.stringify([env.CHATFOLD_APP_URL])};
+    for(const origin of [env.CHATFOLD_APP_URL,customEnv.CHATFOLD_APP_URL]) {
+      let sent;
+      const response=await call("checkout",{customEnv,headers:{origin},body:{email:"alex@example.com"},fetcher:async(url,options)=>{
+        sent=JSON.parse(options.body);return reply({authorization_url:"https://checkout.paystack.com/test",reference:sent.reference});
+      }});
+      assert.equal(response.statusCode,200);assert.equal(sent.callback_url,origin+"/?payment=return");
+      assert.match(response.headers["Set-Cookie"],/^__Host-chatfold-pending=/);assert.ok(!response.headers["Set-Cookie"].includes("Domain="));
+    }
+    for (const origin of [undefined,"null","https://chatfold.tinotech.co.za.evil.test","https://unlisted-preview.vercel.app",env.CHATFOLD_APP_URL+"/"]) {
+      assert.equal((await call("checkout",{customEnv,headers:{origin},body:{email:"alex@example.com"}})).statusCode,403);
+    }
+    assert.equal((await call("checkout",{customEnv,headers:{origin:customEnv.CHATFOLD_APP_URL,"sec-fetch-site":"cross-site"},body:{email:"alex@example.com"}})).statusCode,403);
+  });
+  it("preserves existing pending cookies and receipt recovery through a canonical-domain move",async()=>{
+    const order=createOrder("alex@example.com",cfg), fetcher=providerMock(transaction(order));
+    const customEnv={...env,CHATFOLD_APP_URL:"https://chatfold.tinotech.co.za",CHATFOLD_ADDITIONAL_ORIGINS:JSON.stringify([env.CHATFOLD_APP_URL])};
+    const oldCookie=pendingCookie(order,cfg).split(";")[0];
+    assert.equal((await call("verify",{customEnv,body:{reference:order.reference},cookies:oldCookie,fetcher})).statusCode,200);
+    for (const origin of [env.CHATFOLD_APP_URL,customEnv.CHATFOLD_APP_URL]) {
+      const restored=await call("restore",{customEnv,headers:{origin},body:{reference:order.reference,email:order.email},fetcher});
+      assert.equal(restored.statusCode,200);
+      const delivered=await call("template",{customEnv,cookies:restored.headers["Set-Cookie"][0].split(";")[0],fetcher});
+      assert.equal(delivered.statusCode,200);
+    }
   });
   it("requires callback binding; restores on another device and gates design delivery",async()=>{
     const order=createOrder("alex@example.com",cfg),fetcher=providerMock(transaction(order));
