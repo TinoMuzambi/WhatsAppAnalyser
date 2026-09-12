@@ -75,3 +75,7 @@ Provider contracts: [transaction initialization and verification](https://paysta
 Counts describe the supplied export, not a relationship’s quality. Common iOS/Android formats are supported; missing or unusual export formats can affect results. No analytics, advertising SDK, AI service or third-party runtime dependency is used. Optional billing introduces essential payment cookies and requests containing payment details only; see [privacy](privacy.html).
 
 The public application code remains MIT licensed. The separately held original paid designs have their own personal-use terms and are not included under this repository’s MIT grant.
+
+## Netlify customer releases
+
+The verified Netlify production site is <https://chatfold-tinotech.netlify.app>. Use the [production release workflow and legacy receipt runbook](docs/netlify-production.md) for future releases. Ordinary default-branch commits no longer deploy Vercel production automatically; the original Vercel verifier remains available for earlier receipts.
