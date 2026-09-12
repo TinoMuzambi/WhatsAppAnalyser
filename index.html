@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Private, in-browser statistics for exported WhatsApp chats.">
     <meta name="theme-color" content="#101713">
+    <link rel="canonical" href="https://chatfold.tinotech.co.za/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Chatfold">
+    <meta property="og:title" content="Find the shape of your chat — Chatfold">
+    <meta property="og:description" content="Private WhatsApp chat analysis. Free data exports and two original keepsake designs for R79 once off. Your conversation stays on your device.">
+    <meta property="og:url" content="https://chatfold.tinotech.co.za/">
+    <meta property="og:image" content="https://chatfold.tinotech.co.za/static/chatfold-social.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Chatfold: private chat analysis and printable keepsakes, illustrated with fictional conversation statistics.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Find the shape of your chat — Chatfold">
+    <meta name="twitter:description" content="Private chat analysis, free exports, and original keepsakes. Your conversation stays on your device.">
+    <meta name="twitter:image" content="https://chatfold.tinotech.co.za/static/chatfold-social.png">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="manifest" href="/manifest.json">
@@ -23,11 +37,11 @@
       <section class="hero" aria-labelledby="page-title">
         <p class="kicker">Conversation intelligence, without surveillance</p>
         <h1 id="page-title">Find the shape of your chat.</h1>
-        <p class="hero-copy">Open an exported WhatsApp conversation and turn it into useful, human-readable statistics. Everything runs here in your browser—nothing is uploaded.</p>
+        <p class="hero-copy">Open an exported WhatsApp conversation and turn it into useful, human-readable statistics. Chat analysis runs here in your browser. Your conversation is never uploaded.</p>
         <ul class="privacy-list" aria-label="Privacy guarantees">
           <li>No accounts</li>
           <li>No analytics</li>
-          <li>No network requests</li>
+          <li>Chat stays on your device</li>
         </ul>
       </section>
 
@@ -65,10 +79,16 @@
             <p class="section-number">02 / Findings</p>
             <h2 id="results-title">The conversation at a glance</h2>
           </div>
-          <button class="text-button" id="clear-button" type="button">Clear private data</button>
+          <button class="text-button" id="clear-button" type="button">Clear chat data</button>
         </div>
 
         <div class="stat-grid" id="stat-grid"></div>
+        <div class="free-exports" aria-label="Free exports">
+          <p>Your data is yours. Export it free.</p>
+          <button class="text-button" id="export-json" type="button">Analysis JSON</button>
+          <button class="text-button" id="export-csv" type="button">Contributor CSV</button>
+          <button class="text-button" id="export-source" type="button">Original TXT</button>
+        </div>
 
         <div class="detail-grid">
           <article class="data-card">
@@ -97,6 +117,58 @@
         </div>
       </section>
 
+      <section class="keepsake" id="keepsake" aria-labelledby="keepsake-title">
+        <div class="keepsake-intro">
+          <div>
+            <h2 id="keepsake-title">Make something<br>worth keeping.</h2>
+            <p>Give the shape of your conversation a place on paper. Two original designs turn your statistics into a personal, two-page keepsake.</p>
+            <p class="pack-price">R79 <span>once off · both designs · personal use</span></p>
+            <ul class="pack-features">
+              <li>Correspondence and After hours print designs</li>
+              <li>Your title, dedication, contributors and conversation rhythm</li>
+              <li>Download an offline HTML keepsake; save as PDF from your browser</li>
+              <li>Reuse the purchased pack with your own chats, without another payment</li>
+            </ul>
+            <p class="small-copy">The purchase is for the original report designs. Chat analysis and your data exports stay free. No chat messages appear in the keepsake.</p>
+          </div>
+          <figure class="pack-preview" aria-label="Illustration of the keepsake concept using fictional sample statistics">
+            <div class="preview-paper"><span>Chatfold / Correspondence</span><strong>The everyday<br>between us.</strong><div class="preview-bubble">9<span>messages, one conversation.</span></div><div class="preview-reply">Two voices.<br>Three days.</div></div>
+            <figcaption>Design preview with fictional sample data</figcaption>
+          </figure>
+        </div>
+        <p id="purchase-message" class="purchase-message" role="status" aria-live="polite">Checking purchase availability…</p>
+        <div class="purchase-columns">
+          <form id="purchase-form" class="purchase-form">
+            <h3>Get the keepsake pack</h3>
+            <label for="purchase-email">Email for your payment receipt</label>
+            <input type="email" id="purchase-email" autocomplete="email" maxlength="254" required>
+            <p class="small-copy">Paystack handles your email and payment details. Checkout opens in a new tab so your chat stays here. By purchasing you agree to the <a href="/terms.html">purchase terms</a>.</p>
+            <button class="primary-button" id="purchase-button" type="submit" disabled>Get both designs for R79</button>
+            <a id="checkout-link" target="_blank" rel="noopener noreferrer" hidden>Open secure checkout</a>
+          </form>
+          <form id="report-form" class="report-form">
+            <h3>Personalise your keepsake</h3>
+            <label for="report-title">Title</label>
+            <input id="report-title" maxlength="80" value="Our conversation">
+            <label for="report-dedication">A short dedication <span>(optional)</span></label>
+            <textarea id="report-dedication" rows="2" maxlength="240" placeholder="For all the little things we say."></textarea>
+            <label for="report-theme">Design</label>
+            <select id="report-theme"><option value="correspondence">Correspondence — postal blue</option><option value="after-hours">After hours — soft violet</option></select>
+            <button class="primary-button" id="report-button" type="submit" disabled>Download keepsake</button>
+            <p class="small-copy">After purchase, analyse a chat above and download your design. Keep the downloaded file; it works offline.</p>
+          </form>
+        </div>
+        <details class="restore-details">
+          <summary>Already paid? Restore your purchase</summary>
+          <form id="restore-form" class="restore-form">
+            <div><label for="restore-email">Receipt email</label><input type="email" id="restore-email" autocomplete="email" maxlength="254" required></div>
+            <div><label for="restore-reference">Payment reference</label><input id="restore-reference" maxlength="41" placeholder="chatfold-…" required autocapitalize="none" spellcheck="false"></div>
+            <button class="primary-button" type="submit">Restore purchase</button>
+          </form>
+          <p class="small-copy">Use your Chatfold reference and email from the Paystack receipt. Keep them private. Need help? <a href="mailto:info@tinotech.co.za">Contact support</a> with your receipt reference, without sending your chat.</p>
+        </details>
+      </section>
+
       <section class="how-to" aria-labelledby="how-title">
         <p class="section-number">03 / How it works</p>
         <h2 id="how-title">Export. Open. Explore.</h2>
@@ -110,7 +182,7 @@
 
     <footer>
       <p>Built by <a href="https://github.com/TinoMuzambi" rel="noreferrer">Tino Muzambi</a>. Not affiliated with WhatsApp or Meta.</p>
-      <a href="https://github.com/TinoMuzambi/WhatsAppAnalyser" rel="noreferrer">View source</a>
+      <nav aria-label="Footer"><a href="/privacy.html">Privacy</a> <a href="/terms.html">Purchase terms</a></nav>
     </footer>
 
     <script type="module" src="/static/app.mjs"></script>
