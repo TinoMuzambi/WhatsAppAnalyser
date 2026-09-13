@@ -2,7 +2,7 @@
 
 Private WhatsApp-export analysis, free data exports, and an optional original keepsake design pack sold through Tinotech’s Paystack merchant account.
 
-Netlify production is available at [chatfold-tinotech.netlify.app](https://chatfold-tinotech.netlify.app). The branded address [chatfold.tinotech.co.za](https://chatfold.tinotech.co.za) is bound for coordinated DNS cutover. The original Vercel address remains available for existing browser access and receipt recovery.
+Use [Chatfold at chatfold.tinotech.co.za](https://chatfold.tinotech.co.za). The company domain is live on Netlify with verified HTTPS. The Netlify provider address remains available for deployment checks, and the original Vercel address remains available for existing browser access and receipt recovery.
 
 Chat text, contributor names, titles and dedications stay in browser memory. Free JSON, CSV and original-text downloads never require payment. A R79 once-off purchase unlocks two original printable designs. Buyers download a self-contained HTML report and save it as PDF from their browser. This is a pricing experiment, not evidence of validated demand or earned revenue.
 
@@ -78,4 +78,4 @@ The public application code remains MIT licensed. The separately held original p
 
 ## Netlify customer releases
 
-The verified Netlify production site is <https://chatfold-tinotech.netlify.app>. Use the [production release workflow and legacy receipt runbook](docs/netlify-production.md) for future releases. Ordinary default-branch commits no longer deploy Vercel production automatically; the original Vercel verifier remains available for earlier receipts.
+The customer site is <https://chatfold.tinotech.co.za>; its Netlify provider address is <https://chatfold-tinotech.netlify.app>. Use the [production release workflow and legacy receipt runbook](docs/netlify-production.md) for future releases. Ordinary default-branch commits no longer deploy Vercel production automatically; the original Vercel verifier remains available for earlier receipts.
